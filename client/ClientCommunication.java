@@ -9,8 +9,9 @@ public class ClientCommunication {
     final static private int outgoingClientPort = 49153 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
-        incomingCommunication();
+//        incomingCommunication();
 //        incomingMultiCommunication();
+        System.out.println(InetAddress.getLocalHost());
 
 
     }
@@ -45,6 +46,28 @@ public class ClientCommunication {
         DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), gameServer, incomingServerPort);
         socket.send(outgoingPacket);
         socket.close();
+    }
+
+    public static void addUserToServer(String name) throws Exception{
+        String clientAddress = (InetAddress.getLocalHost()).toString();
+        DatagramSocket outgoingSocket = new DatagramSocket(outgoingClientPort);
+        InetAddress gameServer = InetAddress.getLocalHost();
+        String message = name + "," + clientAddress;
+        DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), gameServer, incomingServerPort);
+        outgoingSocket.send(outgoingPacket);
+        outgoingSocket.close();
+        System.out.println("Waiting for Server Response...");
+        DatagramSocket incomingSocket = new DatagramSocket(incomingClientPort);
+        byte[] messageBuffer = new byte[1024];
+        DatagramPacket incomingPacket = new DatagramPacket(messageBuffer, 1024);
+        incomingSocket.receive(incomingPacket);
+        String incomingMessage = new String(messageBuffer).trim();
+        System.out.println(incomingMessage);
+        incomingSocket.close();
+
+
+
+
     }
 
 }

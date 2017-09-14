@@ -9,10 +9,12 @@ public class ServerCommunication {
     final static private int incomingServerPort = 49152 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
-        String message = "This is a direct message from the server";
-        outgoingDirectCommunication(message);
+//        String message = "This is a direct message from the server";
+//        outgoingDirectCommunication(message);
 //        outgoingMultiCommunication(message);
 //        incomingCommunication();
+        receiveUserNames();
+
 
 
     }
@@ -49,4 +51,24 @@ public class ServerCommunication {
         socket.close();
 
     }
+    public static void receiveUserNames() throws Exception {
+        // Make server wait until the game starts
+        System.out.println("Waiting for client to send a user name...");
+        DatagramSocket incomingSocket = new DatagramSocket(incomingServerPort);
+        byte[] messageBuffer = new byte[1024];
+        DatagramPacket incomingPacket = new DatagramPacket(messageBuffer, 1024);
+        incomingSocket.receive(incomingPacket);
+        String incomingMessage = new String(messageBuffer).trim();
+        System.out.println(incomingMessage);
+        incomingSocket.close();
+        String response = GameServer.addUserToGame(incomingMessage);
+        DatagramSocket outgoingSocket = new DatagramSocket(outgoingServerPort);
+        InetAddress gameServer = InetAddress.getLocalHost();
+        DatagramPacket outgoingPacket = new DatagramPacket(response.getBytes(), response.length(), gameServer, incomingClientPort);
+        outgoingSocket.send(outgoingPacket);
+        outgoingSocket.close();
+
+
+    }
+
 }

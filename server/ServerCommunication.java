@@ -13,7 +13,7 @@ public class ServerCommunication {
 //        outgoingDirectCommunication(message);
 //        outgoingMultiCommunication(message);
 //        incomingCommunication();
-        receiveUserNames();
+        receiveUserInput();
 
 
 
@@ -51,23 +51,40 @@ public class ServerCommunication {
         socket.close();
 
     }
-    public static void receiveUserNames() throws Exception {
+    public static void receiveUserInput() throws Exception {
         // Make server wait until the game starts
-        System.out.println("Waiting for client to send a user name...");
+        System.out.println("Waiting for client to send a request ...");
         DatagramSocket incomingSocket = new DatagramSocket(incomingServerPort);
         byte[] messageBuffer = new byte[1024];
         DatagramPacket incomingPacket = new DatagramPacket(messageBuffer, 1024);
         incomingSocket.receive(incomingPacket);
         String incomingMessage = new String(messageBuffer).trim();
+        System.out.println("Printing the raw incoming message");
         System.out.println(incomingMessage);
         incomingSocket.close();
-        String response = GameServer.addUserToGame(incomingMessage);
-        DatagramSocket outgoingSocket = new DatagramSocket(outgoingServerPort);
-        InetAddress gameServer = InetAddress.getLocalHost();
-        DatagramPacket outgoingPacket = new DatagramPacket(response.getBytes(), response.length(), gameServer, incomingClientPort);
-        outgoingSocket.send(outgoingPacket);
-        outgoingSocket.close();
+        String cleanedMessage[] = cleanMessage(incomingMessage);
+        String userName = cleanedMessage[0];
+        String requestType = cleanedMessage[1];
+        String userClientAddress = cleanedMessage[2];
+        // Always catching the same message, response changes based on if statement, Split before statement
+        if (requestType.equals("addUser")) {
+            String response = GameServer.addUserToGame(userName);
+            // This works
+        }
+            else{
+            String response = "This is a test, we didn't trigger an add user response";
+            DatagramSocket outgoingSocket = new DatagramSocket(outgoingServerPort);
+            InetAddress userClient = InetAddress.getByName(userClientAddress);
+            DatagramPacket outgoingPacket = new DatagramPacket(response.getBytes(), response.length(), userClient, incomingClientPort);
+            outgoingSocket.send(outgoingPacket);
+            outgoingSocket.close();
+        }
 
+
+    }
+    public static String[]  cleanMessage(String message){
+        String[] userMessage = message.split(",");
+        return userMessage;
 
     }
 

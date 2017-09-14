@@ -52,7 +52,7 @@ public class ClientCommunication {
         String clientAddress = (InetAddress.getLocalHost()).toString();
         DatagramSocket outgoingSocket = new DatagramSocket(outgoingClientPort);
         InetAddress gameServer = InetAddress.getLocalHost();
-        String message = name + "," + clientAddress;
+        String message = name + "," + "addUser" + ","  +  clientAddress;
         DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), gameServer, incomingServerPort);
         outgoingSocket.send(outgoingPacket);
         outgoingSocket.close();

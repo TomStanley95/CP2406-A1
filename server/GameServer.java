@@ -1,4 +1,4 @@
-public class gameServer {
+public class GameServer {
     public static void main(String[] args) {
 
     }

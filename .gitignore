@@ -1,3 +1,4 @@
 # Ignore all IDE files.
 .idea/*
 out/*
+SpareCode

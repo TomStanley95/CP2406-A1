@@ -5,7 +5,7 @@ public class TestClient {
 
     @Test
     public void testUserName(){
-        Assert.assertTrue(GameClient.getUserName().getClass().equals(String.class));
+        Assert.assertTrue(GameApp.getUserName().getClass().equals(String.class));
     }
 
 

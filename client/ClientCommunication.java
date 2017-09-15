@@ -11,17 +11,30 @@ public class ClientCommunication {
     public static void main(String[] args) throws Exception {
 
 
-
     }
 
     public static void addUserToServer(String name) throws Exception{
+        String message = name + "," + "addUser" + ",";
+        sendMessageServer(message);
+
+
+
+
+
+
+    }
+    public static void sendMessageServer(String message) throws Exception{
         String clientAddress = (InetAddress.getLocalHost()).toString();
+        message = message + clientAddress;
         DatagramSocket outgoingSocket = new DatagramSocket(outgoingClientPort);
         InetAddress gameServer = InetAddress.getLocalHost();
-        String message = name + "," + "addUser" + ","  +  clientAddress;
         DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), gameServer, incomingServerPort);
         outgoingSocket.send(outgoingPacket);
         outgoingSocket.close();
+        receiveServerResponse();
+
+    }
+    public static void receiveServerResponse() throws Exception{
         System.out.println("Waiting for Server Response...");
         DatagramSocket incomingSocket = new DatagramSocket(incomingClientPort);
         byte[] messageBuffer = new byte[1024];
@@ -31,10 +44,6 @@ public class ClientCommunication {
         System.out.println("Printing the servers response");
         System.out.println(incomingMessage);
         incomingSocket.close();
-
-
-
-
     }
 
 }

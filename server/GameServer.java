@@ -28,7 +28,7 @@ public class GameServer {
         }
         // If we have reached this point without returning a failed message, add the user to the game lobby
         playerNames[emptyPlayerSlot] = userName;
-        return ("Player " + playerNames[emptyPlayerSlot] + " added successfully");
+        return ("Test.Player " + playerNames[emptyPlayerSlot] + " added successfully");
 
     }
 

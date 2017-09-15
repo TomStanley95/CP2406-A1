@@ -9,14 +9,15 @@ public class ServerCommunication {
     final static private int incomingServerPort = 49152 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
-        receiveUserInput();
-
+        while (true){
+            receiveUserInput();
+        }
+//TODO Improve the wait command.
 
 
     }
 
     public static void receiveUserInput() throws Exception {
-        // Make server wait until the game starts
         System.out.println("Waiting for client to send a request ...");
         DatagramSocket incomingSocket = new DatagramSocket(incomingServerPort);
         byte[] messageBuffer = new byte[1024];
@@ -26,6 +27,12 @@ public class ServerCommunication {
         System.out.println("Printing the raw incoming message");
         System.out.println(incomingMessage);
         incomingSocket.close();
+        handleUserInput(incomingMessage);
+
+
+
+    }
+    public static void handleUserInput(String incomingMessage) throws Exception{
         String cleanedMessage[] = cleanMessage(incomingMessage);
         String userName = cleanedMessage[0];
         String requestType = cleanedMessage[1];
@@ -36,7 +43,7 @@ public class ServerCommunication {
             String response = GameServer.addUserToGame(userName);
             serverResponse(response, userClientAddress);
         }
-            else{
+        else{
             String response = "This is a test, we didn't trigger an add user response";
 
         }
@@ -45,8 +52,8 @@ public class ServerCommunication {
     }
     public static void serverResponse(String response, String userClientAddress) throws Exception{
         DatagramSocket outgoingSocket = new DatagramSocket(outgoingServerPort);
-        String destinationAddress = resolveHostName(userClientAddress);
-        InetAddress userClient = InetAddress.getByName(destinationAddress);
+        String clientHostName = resolveHostName(userClientAddress);
+        InetAddress userClient = InetAddress.getByName(clientHostName);
         DatagramPacket outgoingPacket = new DatagramPacket(response.getBytes(), response.length(), userClient, incomingClientPort);
         outgoingSocket.send(outgoingPacket);
         outgoingSocket.close();

@@ -16,12 +16,10 @@ public class ClientCommunication {
     public static void addUserToServer(String name) throws Exception{
         String message = name + "," + "addUser" + ",";
         sendMessageServer(message);
-
-
-
-
-
-
+    }
+    public static void removeUserFromServer(String name) throws Exception{
+        String message = name + "," + "removeUser" +",";
+        sendMessageServer(message);
     }
     public static void sendMessageServer(String message) throws Exception{
         String clientAddress = (InetAddress.getLocalHost()).toString();
@@ -32,7 +30,6 @@ public class ClientCommunication {
         outgoingSocket.send(outgoingPacket);
         outgoingSocket.close();
         receiveServerResponse();
-
     }
     public static void receiveServerResponse() throws Exception{
         System.out.println("Waiting for Server Response...");

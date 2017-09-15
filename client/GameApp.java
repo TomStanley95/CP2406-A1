@@ -1,40 +1,62 @@
 import javax.swing.*;
-import java.util.Arrays;
+
 
 public class GameApp {
     public static void main(String[] args) throws Exception {
-        userMenu();
+        String userName = null;
+        String newUserName;
+        int userChoice = userMenu();
+        while (userChoice != 7) {
+            if (userChoice == 1) {
+                userName = getUserName();
+                ClientCommunication.addUserToServer(userName);
+            } else if (userChoice == 2) {
+                if (userName == null){
+                    System.out.println("You must be a user before you can change user.");
+                    userName = getUserName();
+                }
+                newUserName = getUserName(userName);
+                ClientCommunication.removeUserFromServer(userName);
+                userName = newUserName;
+                ClientCommunication.addUserToServer(userName);
+            }
+            userChoice = userMenu();
+            //TODO Send vote for grid size method
 
+            //TODO get game status method
 
-        // TODO put this in Test Client/Server
-//        String userName = "Tron";
-//        ClientCommunication.addUserToServer(userName);
-//        ClientCommunication.addUserToServer(userName);
+            //TODO save score method
 
-
+            //TODO play game method
+        }
+        System.out.println("Exiting, thanks for playing");
     }
 
     public static String getUserName(){
-        String userName = JOptionPane.showInputDialog("Welcome to place holder game name\nEnter your user name");
+        String userName = JOptionPane.showInputDialog("Welcome to Light Cycles\nEnter your user name");
+        while (userName.equals("")){
+            userName = JOptionPane.showInputDialog("Enter a valid username please");
+        }
         return userName;
     }
-    public static String getUserName(String currentUserName){
-        // Overloaded method to allow the user to change their user name
-        String userName = JOptionPane.showInputDialog("Enter a new user name");
-        return userName;
+    public static String getUserName(String UserName){
+        // Overloaded method to allow the user to change/remove their user name
+        String newUserName = JOptionPane.showInputDialog("Enter a new user name");
+        while (newUserName.equals("")){
+            newUserName = JOptionPane.showInputDialog("Enter a valid username please");
+        }
+        return newUserName;
     }
-    public static void userMenu()throws Exception{
-        System.out.println("What would you like to do\n1.Add User\n2.Remove User\n3.Vote for Grid Size\n4.Game Status");
-        System.out.println("5.Save Score\n6.Play Game");
+    public static int userMenu()throws Exception{
+        System.out.println("What would you like to do?\n1.Add new User\n2.Change User\n3.Vote for Grid Size\n4.Game Status");
+        System.out.println("5.Save Score\n6.Play Game\n7. Exit");
         String userChoiceString = JOptionPane.showInputDialog("");
         int userChoice = Integer.parseInt(userChoiceString);
-        while (!Arrays.asList(1,2,3,4,5,6).contains(userChoice)){
+        while (userChoice <= 0 || userChoice >= 8){
             System.out.println("Invalid selection, please pick again");
             userChoiceString = JOptionPane.showInputDialog("");
             userChoice = Integer.parseInt(userChoiceString);
         }
-        if (userChoice == 1){
-            ClientCommunication.addUserToServer(getUserName());
-        }
+        return userChoice;
     }
 }

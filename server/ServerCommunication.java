@@ -43,9 +43,9 @@ public class ServerCommunication {
             String response = GameServer.addUserToGame(userName);
             serverResponse(response, userClientAddress);
         }
-        else{
-            String response = "This is a test, we didn't trigger an add user response";
-
+        else if(requestType.equals("removeUser")){
+            String respone = GameServer.removeUserFromGame(userName);
+            serverResponse(respone, userClientAddress);
         }
 
 

@@ -6,7 +6,8 @@ public class GameClient {
 // String userName = getUserName();
         String userName = "Tron";
         User user = new User(userName);
-    ClientCommunication.addUserToServer(userName);
+        ClientCommunication.addUserToServer(userName);
+        ClientCommunication.addUserToServer(userName);
 //    String newUserName = getUserName(userName);
 
     }

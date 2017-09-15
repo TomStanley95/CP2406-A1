@@ -9,43 +9,9 @@ public class ClientCommunication {
     final static private int outgoingClientPort = 49153 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
-//        incomingCommunication();
-//        incomingMultiCommunication();
-        System.out.println(InetAddress.getLocalHost());
 
 
-    }
-    public static void incomingCommunication() throws Exception {
-        System.out.println("Waiting for Server...");
-        DatagramSocket socket = new DatagramSocket(incomingClientPort);
-        byte[] messageBuffer = new byte[1024];
-        DatagramPacket IncomingPacket = new DatagramPacket(messageBuffer, 1024);
-        socket.receive(IncomingPacket);
-        String incomingMessage = new String(messageBuffer).trim();
-        System.out.println(incomingMessage);
-        socket.close();
-    }
-    public static void incomingMultiCommunication() throws Exception{
-        System.out.println("Waiting for the server...");
-        MulticastSocket socket = new MulticastSocket(incomingClientPort);
-        InetAddress multiServer = InetAddress.getByName(multicastAddress);
-        socket.joinGroup(multiServer);
-        byte[] messageBuffer = new byte[1024];
-        DatagramPacket IncomingPacket = new DatagramPacket(messageBuffer, 1024);
-        socket.receive(IncomingPacket);
-        String incomingMessage = new String(messageBuffer).trim();
-        System.out.println(incomingMessage);
-        socket.leaveGroup(multiServer);
-        socket.close();
 
-
-    }
-    public static void outgoingCommunication(String message) throws Exception {
-        DatagramSocket socket = new DatagramSocket(outgoingClientPort);
-        InetAddress gameServer = InetAddress.getLocalHost();
-        DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), gameServer, incomingServerPort);
-        socket.send(outgoingPacket);
-        socket.close();
     }
 
     public static void addUserToServer(String name) throws Exception{
@@ -62,6 +28,7 @@ public class ClientCommunication {
         DatagramPacket incomingPacket = new DatagramPacket(messageBuffer, 1024);
         incomingSocket.receive(incomingPacket);
         String incomingMessage = new String(messageBuffer).trim();
+        System.out.println("Printing the servers response");
         System.out.println(incomingMessage);
         incomingSocket.close();
 

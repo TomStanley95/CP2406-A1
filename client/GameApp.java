@@ -2,6 +2,7 @@ import javax.swing.*;
 
 
 public class GameApp {
+
     public static void main(String[] args) throws Exception {
         String userName = null;
         String newUserName;
@@ -19,6 +20,10 @@ public class GameApp {
                 ClientCommunication.removeUserFromServer(userName);
                 userName = newUserName;
                 ClientCommunication.addUserToServer(userName);
+            } else if (userChoice == 6){
+
+
+                // send player ready message to the server, and draw the game board
             }
             userChoice = userMenu();
             //TODO Send vote for grid size method
@@ -59,4 +64,5 @@ public class GameApp {
         }
         return userChoice;
     }
+
 }

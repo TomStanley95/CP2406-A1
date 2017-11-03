@@ -44,8 +44,8 @@ public class ServerCommunication {
             serverResponse(response, userClientAddress);
         }
         else if(requestType.equals("removeUser")){
-            String respone = GameServer.removeUserFromGame(userName);
-            serverResponse(respone, userClientAddress);
+            String response = GameServer.removeUserFromGame(userName);
+            serverResponse(response, userClientAddress);
         }
 
 

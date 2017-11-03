@@ -1,3 +1,4 @@
+import com.sun.xml.internal.bind.v2.TODO;
 import org.junit.Assert;
 import org.junit.Test ;
 
@@ -39,4 +40,5 @@ public class TestGame {
         GameServer.addUserToGame(userName);
         Assert.assertEquals("Failed, that player doesn't exists", GameServer.removeUserFromGame("Larry"));
     }
+    // TODO Add test to see if grid coords are all different
 }

@@ -9,6 +9,9 @@ public class ClientCommunication {
     final static private int outgoingClientPort = 49153 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
+        while (true){
+            receiveIncomingMultiCommunication();
+        }
 
 
     }
@@ -41,6 +44,23 @@ public class ClientCommunication {
         System.out.println("Printing the servers response");
         System.out.println(incomingMessage);
         incomingSocket.close();
+    }
+
+    public static void receiveIncomingMultiCommunication() throws Exception{
+        System.out.println("Waiting for the server to send out a gamestate update...");
+        MulticastSocket socket = new MulticastSocket(incomingClientPort);
+        InetAddress multiServer = InetAddress.getByName(multicastAddress);
+        socket.joinGroup(multiServer);
+        byte[] messageBuffer = new byte[1024];
+        DatagramPacket IncomingPacket = new DatagramPacket(messageBuffer, 1024);
+        socket.receive(IncomingPacket);
+        String incomingMessage = new String(messageBuffer).trim();
+        System.out.println(incomingMessage);
+        GameApp.handleMultiMessage(incomingMessage);
+        socket.leaveGroup(multiServer);
+        socket.close();
+
+
     }
 
 }

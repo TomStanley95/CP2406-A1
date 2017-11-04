@@ -2,6 +2,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Arrays;
 
 public class ServerCommunication {
     final static private String multicastAddress = "228.5.6.7";
@@ -9,10 +10,17 @@ public class ServerCommunication {
     final static private int incomingServerPort = 49152 ;
     final static private int incomingClientPort = 49154 ;
     public static void main(String[] args) throws Exception {
+        GameServer.generateUserStartingPositions();
+        GameServer.addUserToGame("John");
+        GameServer.addUserToGame("William");
+        GameServer.addUserToGame("Magda");
+        getGameUserNames();
+        getGameStates();
         while (true){
             receiveUserInput();
         }
-//TODO Improve the wait command.
+//TODO Improve the wait command by using two threads. one for receiving and handling input, one for updating game state
+        // TODO Use getGameState() then sendGameState()
 
 
     }
@@ -28,8 +36,6 @@ public class ServerCommunication {
         System.out.println(incomingMessage);
         incomingSocket.close();
         handleUserInput(incomingMessage);
-
-
 
     }
     public static void handleUserInput(String incomingMessage) throws Exception{
@@ -68,5 +74,26 @@ public class ServerCommunication {
         return userMessage;
 
     }
-
+    public static void  getGameStates()throws Exception{
+        //TODO Need to find an easier or more efficient way to send the light cycle game state, maybe the server calculates lines and just sends the end points of the line or the direction to add 1 to the original line, update the other lines for each user client side.
+        // TODO Send and end of game state update - figure out a win condition, calculate if a user crossess a line?
+// String lightCycleGameState = GameServer.getLightCyclesGameState();
+//      sendGameState("light cycles", lightCycleGameState);
+        String playerLocationsGameState = GameServer.getPlayerLocationsGameState();
+        sendGameState("player locations", playerLocationsGameState);
+    }
+    public static void getGameUserNames() throws Exception{
+        String playerNames = GameServer.getPlayerNames();
+        sendGameState("player names", playerNames);
+    }
+    public static void sendGameState(String type, String dataToSend) throws Exception{
+        String message = type + "/" + dataToSend;
+        MulticastSocket socket = new MulticastSocket(outgoingServerPort);
+        InetAddress multiServer = InetAddress.getByName(multicastAddress);
+        socket.joinGroup(multiServer);
+        DatagramPacket outgoingPacket = new DatagramPacket(message.getBytes(), message.length(), multiServer, incomingClientPort);
+        socket.send(outgoingPacket);
+        socket.leaveGroup(multiServer);
+        socket.close();
+    }
 }

@@ -1,15 +1,18 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 
 public class GameServer {
+    // TODO Going to need to have another list for player lines, would consist of a 20 deep array, containing a list of previous light locations
+    // TODO generateUserStartingPositions only currently supports 16 users, improve method/make truly random.
     public static int totalNumberPlayers = 20;
+    public static int [] [] lightCycleLocations = new int[20][100];
     public static int [][] playerLocations = new int [2][20];
     public static String[] playerNames = new String[20];
     public static int gridSize = 500;
     public static int playerStartingPositions [] [] = new int[2][20];
     public static void main(String[] args) {
         generateUserStartingPositions();
-//        System.out.println(Arrays.deepToString(playerLocations));
 //        playerLocations [0][0] = 1;
 //        playerLocations [1][0] = 2;
 //        System.out.println(playerLocations[0][0]);
@@ -61,13 +64,12 @@ public class GameServer {
         return ("Player " + userName + " removed successfully");
     }
     public static void generateUserStartingPositions(){
-        // TODO This only currently supports 16 users, improve method.
         int playerStartingBoundsMin = gridSize/5;
         int playerStartingBoundsMax = gridSize - playerStartingBoundsMin;
         int playerGridSpacing = (playerStartingBoundsMax - playerStartingBoundsMin) / 5 ;
-        System.out.println(playerGridSpacing);
-        System.out.println(playerStartingBoundsMin);
-        System.out.println(playerStartingBoundsMax);
+//        System.out.println(playerGridSpacing);
+//        System.out.println(playerStartingBoundsMin);
+//        System.out.println(playerStartingBoundsMax);
         //Iterate through first five player slots, left hand side of grid assigning position
         int playerPositionX = playerGridSpacing;
         int playerPositionY = playerGridSpacing;
@@ -75,8 +77,6 @@ public class GameServer {
             playerStartingPositions[0][i] = playerPositionX;
             playerStartingPositions[1][i] = playerPositionY;
             playerPositionY += playerGridSpacing;
-            System.out.println(i);
-
         }
         //Iterate through next 3 player slots, bottom side of the grid
         playerPositionX = playerGridSpacing * 2;
@@ -85,8 +85,6 @@ public class GameServer {
             playerStartingPositions[0][i] = playerPositionX;
             playerStartingPositions[1][i] = playerPositionY;
             playerPositionX += playerGridSpacing;
-//            System.out.println(i);
-//            System.out.println(playerPositionY);
         }
         // Implement true random later, for now based on player slot
         //Iterate through next five player slots, right side of the grid
@@ -96,8 +94,6 @@ public class GameServer {
             playerStartingPositions[0][i] = playerPositionX;
             playerStartingPositions[1][i] = playerPositionY;
             playerPositionY += playerGridSpacing;
-            System.out.println(i);
-            System.out.println(playerPositionY);
         }
         //Iterate through next 3 player slots, Top side of the grid
         playerPositionX = playerGridSpacing;
@@ -106,15 +102,29 @@ public class GameServer {
             playerStartingPositions[0][i] = playerPositionX;
             playerStartingPositions[1][i] = playerPositionY;
             playerPositionX += playerGridSpacing;
-            System.out.println(i);
-            System.out.println(playerPositionY);
         }
-        System.out.println(Arrays.deepToString(playerStartingPositions));
 
     }
     public static void assignUserStartingPosition(int playerSlot){
-
-
+        playerLocations[0][playerSlot] = playerStartingPositions[0][playerSlot];
+        playerLocations[1][playerSlot] = playerStartingPositions[1][playerSlot];
     }
+    public static String getPlayerNames(){
+        String unCleanPlayerNames[] = playerNames;
+        String cleanedPlayerNames = "";
+        for (int i = 0; i < unCleanPlayerNames.length - 1; i++) {
+            if (unCleanPlayerNames[i] != null){
+                cleanedPlayerNames += unCleanPlayerNames[i] + ",";
+            }else {
+                break;
+            }
+        }
+        return cleanedPlayerNames;
+    }
+    public static String getPlayerLocationsGameState(){return Arrays.deepToString(playerLocations); }
+    public static String getLightCyclesGameState(){
+        return Arrays.deepToString(lightCycleLocations);
+    }
+
 
 }
